@@ -11,7 +11,7 @@ function setGlobals() {
   window.ctx = $canv.getContext('2d')
   
   ctx.lineJoin = 'round'
-  window.debug = false // true
+  window.debug = true // true
 
   // this probably shouldnt be a global...
   window.usingSmallLogo = false
@@ -57,6 +57,11 @@ function init() {
   GAME.firstLoop = true
   //previousTime = Date.now() - previousTime
   requestAnimFrame(draw)
+
+  tgames.gameStarted()
+  if (window.debug) {
+    console.log('gameStarted')
+  }
 }
 
 function lowerQuality() {
@@ -225,6 +230,10 @@ function draw(time) {
       // cleanup dead fish - in here for performance
       if(fishes[i].dead) {
         if(fishes[i] === player) {
+          tgames.gameOver(GAME.levelBar.percent)
+          if (window.debug) {
+            console.log('gameOver, score: ', GAME.levelBar.percent)
+          }
           setTimeout(function(){
             GAME.state = 'menu'
           }, 4000)
