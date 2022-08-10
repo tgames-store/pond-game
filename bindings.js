@@ -54,6 +54,11 @@ function touchDown(e){
       drawMenuButton(true)
       initializeOnUp = true
     }
+  } else if (GAME.state === 'pause' && GAME.MENU.button) {
+    if(collideBox(pos, GAME.MENU.button)) {
+      drawContinueButton(true)
+      initializeOnUp = true
+    }
   }
   
   // audio
@@ -112,6 +117,16 @@ function touchUp(e) {
     drawMenuButton(initializeOnUp)
     if(initializeOnUp){
       init()
+      initializeOnUp = false
+    }
+  } else if (GAME.state === 'pause' && GAME.MENU.button) {
+    drawContinueButton(initializeOnUp)
+    if(initializeOnUp){
+      // await tgames.continueGameAd()
+      if (window.debug) {
+        console.log('continueGameAd')
+      }
+      resume()
       initializeOnUp = false
     }
   }

@@ -55,6 +55,8 @@ function init() {
   GAME.levelBallParticles = []
   GAME.endGameParticles = []
   GAME.firstLoop = true
+
+  GAME.continueCount = 0
   //previousTime = Date.now() - previousTime
   requestAnimFrame(draw)
 
@@ -62,6 +64,17 @@ function init() {
   if (window.debug) {
     console.log('gameStarted')
   }
+}
+
+function resume() {
+  GAME.state = 'playing'
+  GAME.player.dead = false
+  GAME.player.dying = false
+  GAME.fishes = [GAME.player]
+  GAME.spawner = new Spawner($canv.width, $canv.height, GAME.player, GAME.fishes)
+  
+  GAME.continueCount++
+  requestAnimFrame(draw)
 }
 
 function lowerQuality() {
@@ -83,7 +96,11 @@ function draw(time) {
     requestAnimFrame(function(t){
       draw(t)
     })
-  } else {
+  }
+  else if(GAME.state === 'pause') {
+    return drawContinueMenu()
+  }
+  else {
     return fadeInMenu()
   }
 
@@ -230,13 +247,24 @@ function draw(time) {
       // cleanup dead fish - in here for performance
       if(fishes[i].dead) {
         if(fishes[i] === player) {
+
+
           tgames.gameOver(GAME.levelBar.percent)
           if (window.debug) {
             console.log('gameOver, score: ', GAME.levelBar.percent)
           }
-          setTimeout(function(){
-            GAME.state = 'menu'
-          }, 4000)
+          
+          if (GAME.continueCount < 1) {
+            setTimeout(function(){
+              GAME.state = 'pause' 
+            }, 4000)  
+          } else {
+            setTimeout(function(){
+                GAME.state = 'menu'
+              }, 4000)
+          }
+          
+
         }
         fishes.splice(i, 1)
         continue
@@ -332,7 +360,8 @@ function loadAssets(cb) {
     { name: 'logoSmall', src: 'assets/logo-small.png' },
     { name: 'soundOn', src: 'assets/sound-on.png' },
     { name: 'soundOff', src: 'assets/sound-off.png' },
-    {name: 'enter', src: 'assets/enter.png'}
+    {name: 'enter', src: 'assets/enter.png'},
+    {name: 'continue', src: 'assets/continue.png'},
   ]
 
   function process() {
