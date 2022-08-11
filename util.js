@@ -119,3 +119,13 @@ function roundRect (ctx, x, y, w, h, r) {
   ctx.arcTo(x,   y,   x+w, y,   r);
   ctx.closePath();
 }
+
+// localStorage utils
+
+function clearSaveState(name) {
+	localStorage.setItem(name, "{}");
+}
+
+function isStateSaved(name) {
+	return localStorage.getItem(name) != "{}" && localStorage.getItem(name) != undefined;
+}

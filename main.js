@@ -11,7 +11,7 @@ function setGlobals() {
   window.ctx = $canv.getContext('2d')
   
   ctx.lineJoin = 'round'
-  window.debug = true // true
+  window.debug = false // true
 
   // this probably shouldnt be a global...
   window.usingSmallLogo = false
@@ -20,6 +20,7 @@ function setGlobals() {
   // color pallet // blue        l blue        l green         orange         d orange
   window.pallet = [[105,210,231], [167,219,216], [224,228,204], [243,134,48], [250,105,0]]
   window.lastColor = new Color()
+
   window.GAME = {
     MENU: {
       opacity: 1
@@ -28,12 +29,13 @@ function setGlobals() {
     firstLoop : true,
     bufferLoop: true
   }
+  
   window.ASSETS = {loaded: false}
 
-  if(debug){
-    window.stats = new Stats()
-    document.body.appendChild(stats.domElement)
-  }
+  // if(debug){
+  //   window.stats = new Stats()
+  //   document.body.appendChild(stats.domElement)
+  // }
   // game loop
   window.MS_PER_UPDATE = 32
   window.previousTime = 0.0
@@ -43,6 +45,7 @@ function setGlobals() {
 
 setGlobals()
 loadAssets(fadeInMenu)
+
 
 function init() {
   GAME.state = 'playing'
@@ -58,12 +61,49 @@ function init() {
 
   GAME.continueCount = 0
   //previousTime = Date.now() - previousTime
-  requestAnimFrame(draw)
 
   tgames.gameStarted()
   if (window.debug) {
     console.log('gameStarted')
   }
+
+  // load saved GAME
+  if(debug){
+   console.log('finding saved GAME')
+  }
+  if (isStateSaved("GAME")) {
+    if(debug){
+      console.log('saved GAME has been founded')
+    }
+    var savedGame = JSON.parse(localStorage.getItem('GAME'))
+    GAME.state = savedGame.state
+
+    GAME.player.maxSpeed = savedGame.player.maxSpeed
+    GAME.player.size = savedGame.player.size
+    GAME.player.bodyColor = savedGame.player.bodyColor
+    GAME.player.bodyOutline = savedGame.player.bodyOutline
+    GAME.player.circleMap = savedGame.player.circleMap
+    GAME.player.circles = savedGame.player.circles
+    GAME.player.colors = savedGame.player.colors
+    
+    GAME.continueCount = savedGame.continueCount
+    
+    savedGame.levelBar.colors.forEach(e => {  
+      GAME.levelBar.colors.push({col: new Color(e.col.r, e.col.g, e.col.b), loaded: e.loaded})
+    })
+
+    // GAME.levelBar.colors = savedGame.levelBar.colors
+    GAME.levelBar.height = savedGame.levelBar.height
+    GAME.levelBar.percent = savedGame.levelBar.percent
+    GAME.levelBar.targetX = savedGame.levelBar.targetX
+    GAME.levelBar.thickness = savedGame.levelBar.thickness
+    GAME.levelBar.updating = savedGame.levelBar.updating
+    GAME.levelBar.width = savedGame.levelBar.width
+    GAME.levelBar.x = savedGame.levelBar.x
+    GAME.levelBar.y = savedGame.levelBar.y
+  }
+  
+  requestAnimFrame(draw)
 }
 
 function resume() {
@@ -85,10 +125,20 @@ function lowerQuality() {
   }
 }
 
+// save GAME state
+window.onunload = function() {
+  if (GAME.state == 'playing') {
+    localStorage.setItem('GAME', JSON.stringify(GAME))
+    if (window.debug) {
+      console.log('Save GAME state')
+    }
+  } 
+};
+
 // main game loop
 function draw(time) {
   var i, l, j, dist, nextStage, fish, fish2
-
+  
   lag += time - previousTime
   previousTime = time
 
@@ -113,7 +163,7 @@ function draw(time) {
   var levelBallParticles = GAME.levelBallParticles
   var endGameParticles = GAME.endGameParticles
 
-  if(debug) stats.begin()
+  // if(debug) stats.begin()
   var MAX_CYCLES = 17
   while(lag >= MS_PER_UPDATE && MAX_CYCLES) {
     physics()
@@ -138,7 +188,7 @@ function draw(time) {
   }
 
   paint()
-  if(debug) stats.end()
+  // if(debug) stats.end()
 
   function physics() {
     levelBarPhysics()
@@ -249,19 +299,21 @@ function draw(time) {
         if(fishes[i] === player) {
 
 
-          tgames.gameOver(GAME.levelBar.percent)
+          tgames.gameOver(GAME.levelBar.percent * 10)
           if (window.debug) {
-            console.log('gameOver, score: ', GAME.levelBar.percent)
+            console.log('gameOver, score: ', GAME.levelBar.percent * 10)
           }
           
           if (GAME.continueCount < 1) {
             setTimeout(function(){
+              clearSaveState('GAME')
               GAME.state = 'pause' 
             }, 4000)  
           } else {
             setTimeout(function(){
-                GAME.state = 'menu'
-              }, 4000)
+              clearSaveState('GAME')
+              GAME.state = 'menu'
+            }, 4000)
           }
           
 
@@ -406,3 +458,4 @@ function levelUp2(){
 //setTimeout(levelUp, 3000)
 //setTimeout(function(){GAME.levelBar.addColor()}, 10000)
 //setTimeout(levelUp2, 3000)
+

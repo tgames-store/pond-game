@@ -16,6 +16,10 @@ function drawMenuLogo() {
 }
 
 function fadeInMenu() {
+  if (isStateSaved("GAME")) {
+    init()
+    return
+  }
   GAME.state = 'menu'
   GAME.MENU.opacity = 0
   requestAnimFrame(menuFade)
