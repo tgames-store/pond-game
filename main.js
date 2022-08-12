@@ -308,12 +308,12 @@ function draw(time) {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'pause' 
-            }, 4000)  
+            }, 2000)  
           } else {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'menu'
-            }, 4000)
+            }, 200)
           }
           
 
@@ -414,6 +414,7 @@ function loadAssets(cb) {
     { name: 'soundOff', src: 'assets/sound-off.png' },
     {name: 'enter', src: 'assets/enter.png'},
     {name: 'continue', src: 'assets/continue.png'},
+    {name: 'restart', src: 'assets/restart.png'},
   ]
 
   function process() {

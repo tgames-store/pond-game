@@ -74,6 +74,14 @@ function sizeMenu() {
   }
   button.x = $canv.width / 2 - button.width/2
 
+  var restartButton = {
+    x : null,
+    y : $canv.height / 1.8,
+    width : $canv.width * .5,
+    height : $canv.height / 6
+  }
+  restartButton.x = $canv.width / 2 - button.width/2
+  restartButton.y += 200
   // title
   var scale = scaleSize(title.width, title.height, $canv.width - title.minPaddingX, $canv.height - button.y - title.minPaddingY*2)
   title.width *= scale
@@ -83,6 +91,7 @@ function sizeMenu() {
 
   GAME.MENU.title = title
   GAME.MENU.button = button
+  GAME.MENU.restartButton = restartButton
 
   // check to see if we should use lower resolution logo
   if(title.width <= 300 && !usingSmallLogo) {

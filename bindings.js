@@ -14,6 +14,7 @@ var keymap = {
 var userInput = []
 var mouseDown = false
 var initializeOnUp = false
+var restartClicked = false
 
 window.onresize = resizeWindow
 function resizeWindow() {
@@ -58,6 +59,11 @@ function touchDown(e){
     if(collideBox(pos, GAME.MENU.button)) {
       drawContinueButton(true)
       initializeOnUp = true
+    }
+    if(collideBox(pos, GAME.MENU.restartButton)) {
+      drawRestartButton(true)
+      initializeOnUp = true
+      restartClicked = true
     }
   }
   
@@ -119,15 +125,24 @@ function touchUp(e) {
       init()
       initializeOnUp = false
     }
-  } else if (GAME.state === 'pause' && GAME.MENU.button) {
-    drawContinueButton(initializeOnUp)
-    if(initializeOnUp){
-      // await tgames.continueGameAd()
-      if (window.debug) {
-        console.log('continueGameAd')
+  } else if (GAME.state === 'pause' && GAME.MENU.button && GAME.MENU.restartButton) {
+    if (restartClicked) {
+      drawRestartButton(initializeOnUp)
+      if(initializeOnUp){
+        init()
+        initializeOnUp = false
+        restartClicked = false
       }
-      resume()
-      initializeOnUp = false
+    } else {
+      drawContinueButton(initializeOnUp)
+      if(initializeOnUp){
+        // await tgames.continueGameAd()
+        if (window.debug) {
+          console.log('continueGameAd')
+        }
+        resume()
+        initializeOnUp = false
+      }
     }
   }
 }
