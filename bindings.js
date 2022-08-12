@@ -113,7 +113,7 @@ function touchDown(e){
 
 $canv.addEventListener('mouseup', touchUp)
 $canv.addEventListener('touchend', touchUp)
-function touchUp(e) {
+async function touchUp(e) {
   e.preventDefault()
   var pos = eventPos(e)
   if(GAME.state === 'playing') {
