@@ -73,6 +73,14 @@ function sizeMenu() {
     height : $canv.height / 6
   }
   button.x = $canv.width / 2 - button.width/2
+  
+  var continueButton = {
+    x : null,
+    y : $canv.height / 1.8,
+    width : $canv.width * .5,
+    height : $canv.height / 6
+  }
+  continueButton.x = $canv.width / 2 - button.width/2
 
   var restartButton = {
     x : null,
@@ -90,7 +98,9 @@ function sizeMenu() {
   title.y = button.y - title.height - title.minPaddingY
 
   GAME.MENU.title = title
+
   GAME.MENU.button = button
+  GAME.MENU.continueButton = continueButton
   GAME.MENU.restartButton = restartButton
 
   // check to see if we should use lower resolution logo

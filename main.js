@@ -305,18 +305,18 @@ function draw(time) {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'pause' 
-              tgames.gameOver(GAME.levelBar.percent * 10)
+              tgames.gameOver(GAME.levelBar.percent * 100)
               if (window.debug) {
-                console.log('gameOver, score: ', GAME.levelBar.percent * 10)
+                console.log('gameOver, score: ', GAME.levelBar.percent * 100)
               }
             }, 2000)  
           } else {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'menu'
-              tgames.gameOver(GAME.levelBar.percent * 10)
+              tgames.gameOver(GAME.levelBar.percent * 100)
               if (window.debug) {
-                console.log('gameOver, score: ', GAME.levelBar.percent * 10)
+                console.log('gameOver, score: ', GAME.levelBar.percent * 100)
               }
             }, 2000)
           }

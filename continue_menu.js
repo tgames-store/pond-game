@@ -12,7 +12,7 @@ function drawContinueMenu() {
   }
   
 function drawContinueButton(hitting) {
-  var button = GAME.MENU.button
+  var button = GAME.MENU.continueButton
   // button
   ctx.lineWidth = 4
   ctx.strokeStyle = '#444'
