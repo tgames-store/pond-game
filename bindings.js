@@ -136,7 +136,7 @@ function touchUp(e) {
     } else {
       drawContinueButton(initializeOnUp)
       if(initializeOnUp){
-        // await tgames.continueGameAd()
+        await tgames.continueGameAd()
         if (window.debug) {
           console.log('continueGameAd')
         }

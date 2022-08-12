@@ -81,7 +81,7 @@ function sizeMenu() {
     height : $canv.height / 6
   }
   restartButton.x = $canv.width / 2 - button.width/2
-  restartButton.y += 200
+  restartButton.y += button.height + 50
   // title
   var scale = scaleSize(title.width, title.height, $canv.width - title.minPaddingX, $canv.height - button.y - title.minPaddingY*2)
   title.width *= scale

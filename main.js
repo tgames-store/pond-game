@@ -299,21 +299,26 @@ function draw(time) {
         if(fishes[i] === player) {
 
 
-          tgames.gameOver(GAME.levelBar.percent * 10)
-          if (window.debug) {
-            console.log('gameOver, score: ', GAME.levelBar.percent * 10)
-          }
+          
           
           if (GAME.continueCount < 1) {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'pause' 
+              tgames.gameOver(GAME.levelBar.percent * 10)
+              if (window.debug) {
+                console.log('gameOver, score: ', GAME.levelBar.percent * 10)
+              }
             }, 2000)  
           } else {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'menu'
-            }, 200)
+              tgames.gameOver(GAME.levelBar.percent * 10)
+              if (window.debug) {
+                console.log('gameOver, score: ', GAME.levelBar.percent * 10)
+              }
+            }, 2000)
           }
           
 
