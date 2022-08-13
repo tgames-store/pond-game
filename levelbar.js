@@ -44,6 +44,11 @@ LevelBar.prototype.addColor = function() {
   this.colors.push({col: color, loaded: 0})
   this.percent += 0.1
   this.targetX = this.canv.width * this.percent
+  GAME.scoreCounter += 10
+  tgames.setScore(GAME.scoreCounter)
+  if (window.debug) {
+    console.log('setScore, score: ', GAME.scoreCounter)
+  }
 }
 LevelBar.prototype.physics = function() {
   var i, l;
