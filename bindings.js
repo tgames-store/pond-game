@@ -28,7 +28,14 @@ function resizeWindow() {
     GAME.levelBar.resize($canv.width, $canv.height)
     GAME.levelBalls.resize($canv.width, $canv.height)
   } else {
-    if(ASSETS.loaded) drawMenu()
+    if(ASSETS.loaded) {
+      if (GAME.state == 'menu') {
+        drawMenu()
+      }
+      if (GAME.state == 'pause') {
+        drawContinueMenu()
+      }  
+    }
   }
 }
 
