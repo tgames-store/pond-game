@@ -190,6 +190,13 @@ Fish.prototype.killedBy = function(target) {
   this.dying = true
   if(!this.AI || !target.AI) playPop()
   this.deathParticles = this.toParticles(target)
+  if (!target.AI) {
+    GAME.scoreCounter += 10
+    tgames.setScore(GAME.scoreCounter)
+    if (window.debug) {
+      console.log('setScore, score: ', GAME.scoreCounter)
+    }
+  }
 }
 var r, g, b
 Fish.prototype.toParticles = function(target) {

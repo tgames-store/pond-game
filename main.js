@@ -60,6 +60,7 @@ function init() {
   GAME.firstLoop = true
 
   GAME.continueCount = 0
+  GAME.scoreCounter = 0
   //previousTime = Date.now() - previousTime
 
   tgames.gameStarted()
@@ -87,6 +88,7 @@ function init() {
     GAME.player.colors = savedGame.player.colors
     
     GAME.continueCount = savedGame.continueCount
+    GAME.scoreCounter = savedGame.scoreCounter
     
     savedGame.levelBar.colors.forEach(e => {  
       GAME.levelBar.colors.push({col: new Color(e.col.r, e.col.g, e.col.b), loaded: e.loaded})
@@ -295,33 +297,27 @@ function draw(time) {
     i = fishes.length
     while(i-- > 0) {
       // cleanup dead fish - in here for performance
-      if(fishes[i].dead) {
+      if(fishes[i].dead) { 
         if(fishes[i] === player) {
-
-
-          
-          
           if (GAME.continueCount < 1) {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'pause' 
-              tgames.gameOver(GAME.levelBar.percent * 100)
+              tgames.gameOver(GAME.scoreCounter)
               if (window.debug) {
-                console.log('gameOver, score: ', GAME.levelBar.percent * 100)
+                console.log('gameOver, score: ', GAME.scoreCounter)
               }
             }, 2000)  
           } else {
             setTimeout(function(){
               clearSaveState('GAME')
               GAME.state = 'menu'
-              tgames.gameOver(GAME.levelBar.percent * 100)
+              tgames.gameOver(GAME.scoreCounter)
               if (window.debug) {
-                console.log('gameOver, score: ', GAME.levelBar.percent * 100)
+                console.log('gameOver, score: ', GAME.scoreCounter)
               }
             }, 2000)
           }
-          
-
         }
         fishes.splice(i, 1)
         continue
@@ -378,7 +374,6 @@ function draw(time) {
 
     GAME.levelParticles = levelParticles.concat(newParticles)
     player.colors.splice(0, 4)
-
   }
 
   function paintLevelParticles() {
