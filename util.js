@@ -122,6 +122,49 @@ function roundRect (ctx, x, y, w, h, r) {
 
 // localStorage utils
 
+function getSavedGame(){
+  if(debug){
+    console.log('finding saved GAME')
+   }
+   if (isStateSaved("GAME")) {
+     if(debug){
+       console.log('saved GAME has been founded')
+     }
+     return JSON.parse(localStorage.getItem('GAME'))
+   }
+   return false
+}
+
+function initSavedGame(savedGame) {
+  // init saved GAME
+  GAME.state = savedGame.state
+
+  GAME.player.maxSpeed = savedGame.player.maxSpeed
+  GAME.player.size = savedGame.player.size
+  GAME.player.bodyColor = savedGame.player.bodyColor
+  GAME.player.bodyOutline = savedGame.player.bodyOutline
+  GAME.player.circleMap = savedGame.player.circleMap
+  GAME.player.circles = savedGame.player.circles
+  GAME.player.colors = savedGame.player.colors
+  
+  GAME.continueCount = savedGame.continueCount
+  GAME.scoreCounter = savedGame.scoreCounter
+  
+  savedGame.levelBar.colors.forEach(e => {  
+    GAME.levelBar.colors.push({col: new Color(e.col.r, e.col.g, e.col.b), loaded: e.loaded})
+  })
+
+  // GAME.levelBar.colors = savedGame.levelBar.colors
+  GAME.levelBar.height = savedGame.levelBar.height
+  GAME.levelBar.percent = savedGame.levelBar.percent
+  GAME.levelBar.targetX = savedGame.levelBar.targetX
+  GAME.levelBar.thickness = savedGame.levelBar.thickness
+  GAME.levelBar.updating = savedGame.levelBar.updating
+  GAME.levelBar.width = savedGame.levelBar.width
+  GAME.levelBar.x = savedGame.levelBar.x
+  GAME.levelBar.y = savedGame.levelBar.y
+}
+
 function clearSaveState(name) {
 	localStorage.setItem(name, "{}");
 }

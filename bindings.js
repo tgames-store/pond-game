@@ -120,7 +120,7 @@ function touchDown(e){
 
 $canv.addEventListener('mouseup', touchUp)
 $canv.addEventListener('touchend', touchUp)
-async function touchUp(e) {
+function touchUp(e) {
   e.preventDefault()
   var pos = eventPos(e)
   if(GAME.state === 'playing') {
@@ -136,14 +136,14 @@ async function touchUp(e) {
     if (restartClicked) {
       drawRestartButton(initializeOnUp)
       if(initializeOnUp){
-        init()
+        restart()
         initializeOnUp = false
         restartClicked = false
       }
     } else {
       drawContinueButton(initializeOnUp)
       if(initializeOnUp){
-        await tgames.continueGameAd()
+        tgames.continueGameAd()
         if (window.debug) {
           console.log('continueGameAd')
         }

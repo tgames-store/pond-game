@@ -257,7 +257,8 @@ Fish.prototype.physics = function(){
       if(p.physics() < p.target.size/8+10) {
         this.deathParticles.splice(i,1)
 
-        p.target.setSize(p.target.size+0.001 * (isMobile ? 6 : 1))
+        // p.target.setSize(p.target.size+0.001 * (isMobile ? 6 : 1))
+        p.target.setSize(p.target.size+0.002 * (isMobile ? 6 : 1))
         if(this.colors.length > 0) {
           for(var i=this.colors.length-1;i>=0;i--) {
             this.colors[i].loaded = 0

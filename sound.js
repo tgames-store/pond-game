@@ -40,7 +40,7 @@ function playPop() {
 function drawSoundControl() {
   if(typeof ctx === 'undefined') return
   ctx.fillStyle = '#111'
-  ctx.fillRect($canv.width - 25, 10, 50, 25)
+  ctx.fillRect($canv.width - 25, 10, 50, 28)
   if(muted)
     ctx.drawImage(ASSETS.soundOff, $canv.width - 25, 10)
   else

@@ -1,7 +1,7 @@
 function LevelBalls(width, height) {
   this.balls = []
   this.nextColors = Array.apply([], new Array(2)).map(function(){ return {col: randColor()}})
-  this.ballRadius = 14
+  this.ballRadius = 7
   this.maxWidth = width
   this.maxHeight = height
   this.thickness = 2
@@ -44,7 +44,7 @@ LevelBalls.prototype.physics = function() {
   for(var i=0;i<this.balls.length;i++) {
     cnt += this.balls[i].physics() ? 1 : 0
   }
-  return cnt === 10
+  return cnt === 3
 }
 LevelBalls.prototype.toParticles = function(target) {
   return particalize.call(this, target, this.y, 8, 0.16)

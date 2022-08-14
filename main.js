@@ -59,54 +59,49 @@ function init() {
   GAME.endGameParticles = []
   GAME.firstLoop = true
 
-  GAME.continueCount = 0
+  GAME.continueCount = 9999
   GAME.scoreCounter = 0
   //previousTime = Date.now() - previousTime
 
+  var savedGame = getSavedGame()
+  if (savedGame) {
+    initSavedGame(savedGame)
+  }
+  
   tgames.gameStarted()
   if (window.debug) {
     console.log('gameStarted')
   }
+  
+  requestAnimFrame(draw)
+}
 
-  // load saved GAME
-  if(debug){
-   console.log('finding saved GAME')
-  }
-  if (isStateSaved("GAME")) {
-    if(debug){
-      console.log('saved GAME has been founded')
-    }
-    var savedGame = JSON.parse(localStorage.getItem('GAME'))
-    GAME.state = savedGame.state
+function restart() {
+  GAME.state = 'playing'
+  GAME.player = new Fish(false)
+  GAME.fishes = [GAME.player]
+  GAME.spawner = new Spawner($canv.width, $canv.height, GAME.player, GAME.fishes)
+  GAME.levelParticles = []
+  GAME.levelBar = new LevelBar($canv.width)
+  GAME.levelBalls = new LevelBalls($canv.width, $canv.height)
+  GAME.levelBallParticles = []
+  GAME.endGameParticles = []
+  GAME.firstLoop = true
 
-    GAME.player.maxSpeed = savedGame.player.maxSpeed
-    GAME.player.size = savedGame.player.size
-    GAME.player.bodyColor = savedGame.player.bodyColor
-    GAME.player.bodyOutline = savedGame.player.bodyOutline
-    GAME.player.circleMap = savedGame.player.circleMap
-    GAME.player.circles = savedGame.player.circles
-    GAME.player.colors = savedGame.player.colors
-    
-    GAME.continueCount = savedGame.continueCount
-    GAME.scoreCounter = savedGame.scoreCounter
-    
-    savedGame.levelBar.colors.forEach(e => {  
-      GAME.levelBar.colors.push({col: new Color(e.col.r, e.col.g, e.col.b), loaded: e.loaded})
-    })
+  GAME.continueCount = 9999
+  GAME.scoreCounter = 0
+  //previousTime = Date.now() - previousTime
 
-    // GAME.levelBar.colors = savedGame.levelBar.colors
-    GAME.levelBar.height = savedGame.levelBar.height
-    GAME.levelBar.percent = savedGame.levelBar.percent
-    GAME.levelBar.targetX = savedGame.levelBar.targetX
-    GAME.levelBar.thickness = savedGame.levelBar.thickness
-    GAME.levelBar.updating = savedGame.levelBar.updating
-    GAME.levelBar.width = savedGame.levelBar.width
-    GAME.levelBar.x = savedGame.levelBar.x
-    GAME.levelBar.y = savedGame.levelBar.y
+  clearSaveState('GAME')
+  
+  tgames.gameStarted()
+  if (window.debug) {
+    console.log('gameStarted (restarted)')
   }
   
   requestAnimFrame(draw)
 }
+
 
 function resume() {
   GAME.state = 'playing'
@@ -115,7 +110,7 @@ function resume() {
   GAME.fishes = [GAME.player]
   GAME.spawner = new Spawner($canv.width, $canv.height, GAME.player, GAME.fishes)
   
-  GAME.continueCount++
+  GAME.continueCount--
   requestAnimFrame(draw)
 }
 
@@ -127,9 +122,20 @@ function lowerQuality() {
   }
 }
 
+
+function drawScore(score = 0) {
+  ctx.fillStyle = '#111'
+  ctx.fillRect(10, 10, 20, 40)
+  ctx.fillStyle = "#f2f2f2"
+  
+  ctx.font = '20px mainFont'
+  ctx.fillText('Score: ' + score, 20, 40)
+}
+
+
 // save GAME state
 window.onunload = function() {
-  if (GAME.state == 'playing') {
+  if (GAME.state === 'playing' || GAME.state === 'pause') {
     localStorage.setItem('GAME', JSON.stringify(GAME))
     if (window.debug) {
       console.log('Save GAME state')
@@ -213,6 +219,8 @@ function draw(time) {
     paintLevelParticles()
     paintLevelBallParticles()
     levelBalls.draw(ctx)
+
+    drawScore(GAME.scoreCounter)
 
     // dynamic position objects
     ctx.save()
@@ -299,9 +307,9 @@ function draw(time) {
       // cleanup dead fish - in here for performance
       if(fishes[i].dead) { 
         if(fishes[i] === player) {
-          if (GAME.continueCount < 1) {
+          if (GAME.continueCount > 1) {
             setTimeout(function(){
-              clearSaveState('GAME')
+              // clearSaveState('GAME')
               GAME.state = 'pause' 
               tgames.gameOver(GAME.scoreCounter)
               if (window.debug) {
@@ -407,6 +415,16 @@ function draw(time) {
 }
 
 function loadAssets(cb) {
+  var mainFont = new FontFace('mainFont', 'url("assets/Leckerli One.ttf")');
+
+  mainFont.load().then(function(font){
+    // with canvas, if this is ommited won't work
+    document.fonts.add(font);
+    if (debug) {
+      console.log('Font loaded');
+    }
+  });
+  
   var imgs = [
     { name: 'logo', src: 'assets/logo.png' },
     { name: 'logoSmall', src: 'assets/logo-small.png' },
